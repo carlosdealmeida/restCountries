@@ -1,0 +1,55 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (countries == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>alpha2Code</th>
+                <th>alpha3Code</th>
+                <th>capital</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var country in countries)
+            {
+                <tr>
+                    <td>@country.name</td>
+                    <td>@country.alpha2Code</td>
+                    <td>@country.alpha3Code</td>
+                    <td>@country.capital</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Countries[] countries;
+
+    protected override async Task OnInitializedAsync()
+    {
+        countries = await Http.GetFromJsonAsync<Countries[]>("https://restcountries.eu/rest/v2/all");
+    }
+
+    public class Countries
+    {
+        public string name { get; set; }
+
+        public string alpha2Code { get; set; }
+
+        public string alpha3Code { get; set; }
+
+        public string capital { get; set; }
+    }
+}
